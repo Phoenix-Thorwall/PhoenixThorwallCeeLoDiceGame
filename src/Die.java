@@ -5,6 +5,8 @@ public class Die {
 
     }
 
+
+
     public int getRollVal()
     {
         return rollVal;

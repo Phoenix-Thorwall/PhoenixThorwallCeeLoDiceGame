@@ -2,12 +2,14 @@ public class Player {
     private String name;
     private int chips;
     private int score;
+    private int wager;
 
-    public Player(String name, int chips, int score)
+    public Player(String name, int chips, int score, int wager)
     {
        this.name = name;
        this.chips = chips;
        this.score = score;
+       this.wager = wager;
     }
 
     public String getName()
@@ -28,5 +30,15 @@ public class Player {
     public int getScore()
     {
         return score;
+    }
+
+    public int getWager()
+    {
+        return wager;
+    }
+
+    public void setWager(int change)
+    {
+        wager = change;
     }
 }
