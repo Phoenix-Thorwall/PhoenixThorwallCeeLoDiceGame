@@ -14,7 +14,7 @@ public class Die {
 
     public int rollDice()
     {
-        rollVal = (int) (Math.random() + 6) + 1;
+        rollVal = (int) (Math.random() * 6) + 1;
         return rollVal;
     }
 }
