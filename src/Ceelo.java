@@ -21,10 +21,9 @@ public class Ceelo {
 
     private boolean valid = false;
 
+    private Player currentPlayer;
+
     int[] rollCollection = new int[3];
-    private int firstRoll = 0;
-    private int secondRoll = 0;
-    private int thirdRoll = 0;
 
     public void play()
     {
@@ -54,32 +53,34 @@ public class Ceelo {
         while (!bankBreak || !playersLose)
         {
             System.out.println("Round " + rounds + ": C-Low Goes First!");
-            System.out.println("But before we begin, you guys will have to make a wager with your chips! Players start with 100 each");
+            System.out.println("But before we begin, you guys will have to make a wager with your chips!");
             //Checks before round begins
             if (ALow.getChips() > 0)
             {
-                System.out.println("How much are you betting " + ALow.getName() + "?");
+                System.out.println("How much are you betting " + ALow.getName() + "? (You currently have " + ALow.getChips() + " chips)");
                 ALow.setWager(scan.nextInt());
             }
 
             if (BLow.getChips() > 0)
             {
-                System.out.println("How much are you betting " + BLow.getName() + "?");
+                System.out.println("How much are you betting " + BLow.getName() + "? (You currently have " + BLow.getChips() + " chips)");
                 BLow.setWager(scan.nextInt());
             }
 
             if (DLow.getChips() > 0)
             {
-                System.out.println("How much are you betting " + DLow.getName() + "?");
+                System.out.println("How much are you betting " + DLow.getName() + "? (You currently have " + DLow.getChips() + " chips)");
                 DLow.setWager(scan.nextInt());
             }
             //Round finally begins!
             System.out.println("Here are C-Low's Rolls:");
             //I want to roll the dice, but I should add them to a list in order to compare them to one another to determine the outcome...
-            //While(!valid)
-            playerRoll();
-            //Now I have to actually check the contents of the list to determine what condition is triggered
-            determineOutcome();
+            while(!valid)
+            {
+                roll();
+                //Now I have to actually check the contents of the list to determine what condition is triggered
+                determineOutcomeBANKER();
+            }
 
 
 
@@ -89,26 +90,49 @@ public class Ceelo {
                 if (ALow.getChips() > 0)
                 {
                     System.out.println(ALow.getName() + "'s turn!");
+                    valid = false;
+                    currentPlayer = ALow;
+                    while(!valid)
+                    {
+                        roll();
+                        determineOutcomePLAYER();
+                    }
                 }
 
                 if (BLow.getChips() > 0)
                 {
                     System.out.println(BLow.getName() + "'s turn!");
+                    valid = false;
+                    currentPlayer = BLow;
+                    while(!valid)
+                    {
+                        roll();
+                        determineOutcomePLAYER();
+                    }
                 }
 
                 if (DLow.getChips() > 0)
                 {
                     System.out.println(DLow.getName() + "'s turn!");
+                    valid = false;
+                    currentPlayer = DLow;
+                    while(!valid)
+                    {
+                        roll();
+                        determineOutcomePLAYER();
+                    }
                 }
             }
 
 
         rounds++;
+        valid = false;
+        passRound = false;
         }
     }
 
 
-    private void playerRoll()
+    private void roll()
     {
         for (int i = 0; i < 3; i++)
         {
@@ -117,26 +141,54 @@ public class Ceelo {
         }
     }
 
-    private void determineOutcome()
+    private void determineOutcomeBANKER()
     {
-//IDK HOW TO USE THESE YET :(
-//firstRoll = rollCollection[0];
-//secondRoll = rollCollection[1];
-//thirdRoll = rollCollection[2];
-
         if (is4() && is5() && is6())
         {
-            //implement a win
-            //valid = true
+            bankerWin();
+            valid = true;
         }
         else if (is1() && is2() && is3())
         {
-            //implement a loss
-            //valid = true
+            bankerLose();
+            valid = true;
         }
         //Figure out how to check for doubles (then make valid true)
         //Maybe if nothing else happens, then we make a variable equal to false. And on the outside where this gets called, dice rolls and determine conditions continue happening until the variable is set to true
+        else if (rollCollection[0] == rollCollection[1] || rollCollection[0] == rollCollection[2] || rollCollection[1] == rollCollection[2])
+        {
+            for (int i = 0; i < rollCollection.length; i++)
+            {
+                for (int j = i + 1; j < rollCollection.length; j++)
+                {
+                    if (rollCollection[i] == rollCollection[j])
+                    {
+                        CLow.setScore(rollCollection[j]);
+                    }
+                }
+            }
+            System.out.println("DOUBLES!!!! C-Low now has a score of " + CLow.getScore());
+            valid = true;
+            passRound = true;
+        }
+        else
+        {
+            System.out.println("Well that's a BUST... Let's try again!");
+        }
+    }
 
+    private void determineOutcomePLAYER()
+    {
+        if (is4() && is5() && is6())
+        {
+            playerWin();
+            valid = true;
+        }
+        else if (is1() && is2() && is3())
+        {
+            playerLose();
+            valid = true;
+        }
     }
 
 
@@ -216,5 +268,48 @@ public class Ceelo {
         return false;
     }
 
+    private void bankerWin()
+    {
+        CLow.setChips(ALow.getWager() + BLow.getWager() + DLow.getWager());
+        ALow.setChips(ALow.getWager() * -1);
+        BLow.setChips(BLow.getWager() * -1);
+        DLow.setChips(DLow.getWager() * -1);
+        System.out.println("C-Low has done it again! He won the round and gets all the chips!");
+        System.out.println("C-Low now has " + CLow.getChips() + " chips\n" + ALow.getName() + " now has "
+                + ALow.getChips() + " chips\n" + BLow.getName() + " now has " + BLow.getChips() + " chips\n"
+                + DLow.getName() + " now has " + DLow.getChips() + " chips");
+    }
+
+    private void bankerLose()
+    {
+        CLow.setChips((ALow.getWager() + BLow.getWager() + DLow.getWager()) * -1);
+        ALow.setChips(ALow.getWager());
+        BLow.setChips(BLow.getWager());
+        DLow.setChips(DLow.getWager());
+        System.out.println("I CANT BELIEVE C-LOW LOST. He owes you some chips...");
+        System.out.println("C-Low now has " + CLow.getChips() + " chips\n" + ALow.getName() + " now has "
+                + ALow.getChips() + " chips\n" + BLow.getName() + " now has " + BLow.getChips() + " chips\n"
+                + DLow.getName() + " now has " + DLow.getChips() + " chips");
+    }
+
+    private void playerWin()
+    {
+        CLow.setChips(currentPlayer.getWager() * -1);
+        currentPlayer.setChips(currentPlayer.getWager());
+        System.out.println("CONGRATULATIONS " + currentPlayer.getName() + "! You bested C-Low and won "
+                + currentPlayer.getWager() + " chips");
+       System.out.println("C-Low now has " + CLow.getChips() + " chips\n" + currentPlayer.getName()
+               + "now has " + currentPlayer.getChips() + " chips");
+    }
+
+    private void playerLose()
+    {
+        CLow.setChips(currentPlayer.getWager());
+        currentPlayer.setChips(currentPlayer.getWager() * -1);
+        System.out.println("OH NO!! Unfortunately, you lost and now owe C-Low "
+                + currentPlayer.getWager() + " chips");
+        System.out.println("C-Low now has " + CLow.getChips() + " chips\n" + currentPlayer.getName()
+                + "now has " + currentPlayer.getChips() + " chips");
+    }
 
 }

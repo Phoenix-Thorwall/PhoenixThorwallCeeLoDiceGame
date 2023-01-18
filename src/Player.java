@@ -41,4 +41,14 @@ public class Player {
     {
         wager = change;
     }
+
+    public void setScore(int value)
+    {
+        score = value;
+    }
+
+    public void setChips(int value)
+    {
+        chips += value;
+    }
 }
