@@ -23,6 +23,8 @@ public class Ceelo {
 
     private Player currentPlayer;
 
+    private int theDouble;
+
     int[] rollCollection = new int[3];
 
     public void play()
@@ -143,7 +145,13 @@ public class Ceelo {
 
     private void determineOutcomeBANKER()
     {
-        if (is4() && is5() && is6())
+        if (rollCollection[0] == rollCollection[1] && rollCollection[0] == rollCollection[2])
+        {
+            System.out.println("\nTRIPLES!!!!!");
+            bankerWin();
+            valid = true;
+        }
+        else if (is4() && is5() && is6())
         {
             bankerWin();
             valid = true;
@@ -163,7 +171,8 @@ public class Ceelo {
                 {
                     if (rollCollection[i] == rollCollection[j])
                     {
-                        CLow.setScore(rollCollection[j]);
+                        theDouble = rollCollection[j];
+                        CLow.setScore(rollCollection[0] + rollCollection[1] + rollCollection[2] - (theDouble * 2));
                     }
                 }
             }
@@ -179,7 +188,13 @@ public class Ceelo {
 
     private void determineOutcomePLAYER()
     {
-        if (is4() && is5() && is6())
+        if (rollCollection[0] == rollCollection[1] && rollCollection[0] == rollCollection[2])
+        {
+            System.out.println("\nTRIPLES!!!!!");
+            playerWin();
+            valid = true;
+        }
+        else if (is4() && is5() && is6())
         {
             playerWin();
             valid = true;
@@ -188,6 +203,16 @@ public class Ceelo {
         {
             playerLose();
             valid = true;
+        }
+        else if (rollCollection[0] == rollCollection[1] || rollCollection[0] == rollCollection[2] || rollCollection[1] == rollCollection[2])
+        {
+            System.out.println("\nDOUBLES!!!!");
+            playerDoubles();
+            valid = true;
+        }
+        else
+        {
+            System.out.println("Well that's a BUST... Let's try again!");
         }
     }
 
@@ -309,7 +334,32 @@ public class Ceelo {
         System.out.println("OH NO!! Unfortunately, you lost and now owe C-Low "
                 + currentPlayer.getWager() + " chips");
         System.out.println("C-Low now has " + CLow.getChips() + " chips\n" + currentPlayer.getName()
-                + "now has " + currentPlayer.getChips() + " chips");
+                + " now has " + currentPlayer.getChips() + " chips");
+    }
+
+    private void playerDoubles()
+    {
+        for (int i = 0; i < rollCollection.length; i++)
+        {
+            for (int j = i + 1; j < rollCollection.length; j++)
+            {
+                if (rollCollection[i] == rollCollection[j])
+                {
+                    theDouble = rollCollection[j];
+                    currentPlayer.setScore(rollCollection[0] + rollCollection[1] + rollCollection[2] - (theDouble * 2));
+                }
+            }
+        }
+        if (currentPlayer.getScore() >= CLow.getScore())
+        {
+            System.out.println("Your score of " + currentPlayer.getScore() + " beats C-Low's score of " + CLow.getScore() + "!");
+            playerWin();
+        }
+        else
+        {
+            System.out.println("C-Low's score of " + CLow.getScore() + " beats your score of " + currentPlayer.getScore() + " :(");
+            playerLose();
+        }
     }
 
 }
