@@ -9,14 +9,14 @@ public class Ceelo {
     public Die die = new Die();
 
 
-    Banker CLow = new Banker ("C-Low", 1000, 0);
-    private boolean bankBreak = CLow.getChips() < 0;
+    Banker CLow = new Banker ("C-Low", 0, 0);
+    private boolean bankBreak;
 
     Player ALow = new Player("A-Low", 100, 0, 0);
     Player BLow = new Player("B-Low", 100, 0, 0);
     Player DLow = new Player("D-Low", 100, 0, 0);
 
-    private boolean playersLose = ALow.getChips() < 0 && BLow.getChips() < 0 && DLow.getChips() < 0;
+    private boolean playersLose;
     private boolean passRound = false;
 
     private boolean valid = false;
@@ -26,6 +26,14 @@ public class Ceelo {
     private int theDouble;
 
     int[] rollCollection = new int[3];
+
+    public int topScore = 0;
+
+    private void recheckConditions()
+    {
+        bankBreak = CLow.getChips() == 0;
+        playersLose = ALow.getChips() == 0 && BLow.getChips() == 0 && DLow.getChips() == 0;
+    }
 
     public void play()
     {
@@ -52,7 +60,8 @@ public class Ceelo {
         System.out.println("");
 
         int rounds = 1;
-        while (!bankBreak || !playersLose)
+        recheckConditions();
+        while (!bankBreak && !playersLose)
         {
             System.out.println("Round " + rounds + ": C-Low Goes First!");
             System.out.println("But before we begin, you guys will have to make a wager with your chips!");
@@ -130,6 +139,15 @@ public class Ceelo {
         rounds++;
         valid = false;
         passRound = false;
+        recheckConditions();
+        }
+        if (bankBreak)
+        {
+            System.out.println("Congratulations players you have defeated C-Low!");
+        }
+        if (playersLose)
+        {
+            System.out.println("Unfortunately C-Low has won yet again. Better luck next time...");
         }
     }
 

@@ -3,7 +3,7 @@ public class Main {
     public static void main(String[] args){
         Scanner scan = new Scanner (System.in);
 
-
+        int answer = 1;
         Ceelo game = new Ceelo();
 
         System.out.println("Welcome to our totally legal game of Ceelo! Here you 3 will test your skills against our top Banker C-Low");
@@ -11,6 +11,18 @@ public class Main {
         System.out.println("");
 
 
-        game.play();
+        while(answer != 3)
+        {
+            game.play();
+            System.out.println("Well that sure was fun!\n");
+            System.out.print("Would you like to\n1) Play Again\n2) View the Top Score\n3) Quit");
+            answer = scan.nextInt();
+            if (answer == 2)
+            {
+                System.out.println("The top score is ")
+            }
+        }
+
+
     }
 }
