@@ -5,13 +5,6 @@ public class Die {
 
     }
 
-
-
-    public int getRollVal()
-    {
-        return rollVal;
-    }
-
     public int rollDice()
     {
         rollVal = (int) (Math.random() * 6) + 1;

@@ -9,10 +9,6 @@ public class Banker {
         this.chips = chips;
         this.score = score;
     }
-    public String getName()
-    {
-        return name;
-    }
 
     public int getChips()
     {
