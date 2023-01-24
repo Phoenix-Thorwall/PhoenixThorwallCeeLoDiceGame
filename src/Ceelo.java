@@ -12,9 +12,9 @@ public class Ceelo {
     Banker CLow = new Banker ("C-Low", 0, 0);
     private boolean bankBreak;
 
-    Player ALow = new Player("A-Low", 100, 0, 0);
-    Player BLow = new Player("B-Low", 100, 0, 0);
-    Player DLow = new Player("D-Low", 100, 0, 0);
+    Player ALow = new Player("A-Low", 0, 0, 0);
+    Player BLow = new Player("B-Low", 0, 0, 0);
+    Player DLow = new Player("D-Low", 0, 0, 0);
 
     private boolean playersLose;
     private boolean passRound = false;
@@ -27,8 +27,12 @@ public class Ceelo {
 
     int[] rollCollection = new int[3];
 
-    public int topScore = 0;
+    private int topScore = 0;
 
+    public int getTopScore()
+    {
+        return topScore;
+    }
     private void recheckConditions()
     {
         bankBreak = CLow.getChips() == 0;
@@ -37,6 +41,12 @@ public class Ceelo {
 
     public void play()
     {
+        CLow.setChips((CLow.getChips() * -1) + 500);
+        ALow.setChips((ALow.getChips() * -1) + 100);
+        BLow.setChips((BLow.getChips() * -1) + 100);
+        DLow.setChips((DLow.getChips() * -1) + 100);
+
+        System.out.println("");
         System.out.print("Player 1 name [ENTER to skip]: ");
         String answer = scan.nextLine();
         if (!(answer.equals("")))
@@ -144,10 +154,12 @@ public class Ceelo {
         if (bankBreak)
         {
             System.out.println("Congratulations players you have defeated C-Low!");
+            determineTopScore();
         }
         if (playersLose)
         {
             System.out.println("Unfortunately C-Low has won yet again. Better luck next time...");
+            determineTopScore();
         }
     }
 
@@ -342,7 +354,7 @@ public class Ceelo {
         System.out.println("CONGRATULATIONS " + currentPlayer.getName() + "! You bested C-Low and won "
                 + currentPlayer.getWager() + " chips");
        System.out.println("C-Low now has " + CLow.getChips() + " chips\n" + currentPlayer.getName()
-               + "now has " + currentPlayer.getChips() + " chips");
+               + " now has " + currentPlayer.getChips() + " chips");
     }
 
     private void playerLose()
@@ -377,6 +389,22 @@ public class Ceelo {
         {
             System.out.println("C-Low's score of " + CLow.getScore() + " beats your score of " + currentPlayer.getScore() + " :(");
             playerLose();
+        }
+    }
+
+    private void determineTopScore()
+    {
+        if (ALow.getChips() > topScore)
+        {
+            topScore = ALow.getChips();
+        }
+        if (BLow.getChips() > topScore)
+        {
+            topScore = BLow.getChips();
+        }
+        if (DLow.getChips() > topScore)
+        {
+            topScore = DLow.getChips();
         }
     }
 
