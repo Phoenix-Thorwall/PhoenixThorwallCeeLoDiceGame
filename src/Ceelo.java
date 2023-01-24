@@ -6,28 +6,22 @@ public class Ceelo {
     {
     }
 
+   //Objects!
     public Die die = new Die();
-
-
     Banker CLow = new Banker ("C-Low", 0, 0);
-    private boolean bankBreak;
-
     Player ALow = new Player("A-Low", 0, 0, 0);
     Player BLow = new Player("B-Low", 0, 0, 0);
     Player DLow = new Player("D-Low", 0, 0, 0);
-
+    private Player currentPlayer;
+//Instance Variables
     private boolean playersLose;
     private boolean passRound = false;
-
     private boolean valid = false;
-
-    private Player currentPlayer;
-
+    private boolean bankBreak;
     private int theDouble;
-
-    int[] rollCollection = new int[3];
-
     private int topScore = 0;
+//ARRAYS
+    int[] rollCollection = new int[3];
 
     public int getTopScore()
     {
@@ -96,6 +90,7 @@ public class Ceelo {
             //Round finally begins!
             System.out.println("Here are C-Low's Rolls:");
             //I want to roll the dice, but I should add them to a list in order to compare them to one another to determine the outcome...
+            //A roll is valid if it generates a specific outcome
             while(!valid)
             {
                 roll();
@@ -105,7 +100,7 @@ public class Ceelo {
 
 
 
-
+// "Passing the Round" is when the banker generates a score and lets the other players roll dice
             if (passRound)
             {
                 if (ALow.getChips() > 0)
@@ -172,7 +167,7 @@ public class Ceelo {
             System.out.println(rollCollection[i]);
         }
     }
-
+// Makes actions based on Banker dice roll results
     private void determineOutcomeBANKER()
     {
         if (rollCollection[0] == rollCollection[1] && rollCollection[0] == rollCollection[2])
@@ -215,7 +210,7 @@ public class Ceelo {
             System.out.println("Well that's a BUST... Let's try again!");
         }
     }
-
+// Makes actions based on player dice roll results
     private void determineOutcomePLAYER()
     {
         if (rollCollection[0] == rollCollection[1] && rollCollection[0] == rollCollection[2])
@@ -366,7 +361,7 @@ public class Ceelo {
         System.out.println("C-Low now has " + CLow.getChips() + " chips\n" + currentPlayer.getName()
                 + " now has " + currentPlayer.getChips() + " chips");
     }
-
+//If a player rolls doubles and generates a score...
     private void playerDoubles()
     {
         for (int i = 0; i < rollCollection.length; i++)
